@@ -1,15 +1,18 @@
 import { useMutation, useQueryClient} from "react-query"
 import { login } from "../services/auth"
-import { UserLoginRequest } from "../utils/types"
-
+import { UserFromJwt, UserLoginRequest, UserLoginResponse } from "../utils/types"
+import jwt_decode from "jwt-decode";
 
 export const useLogin = () => {
     const queryClient = useQueryClient();
 
     return useMutation((loginRequest: UserLoginRequest) => login(loginRequest), {
-        onSuccess: (data) => {
-            console.log('ACA LA DATA', data);
-            queryClient.setQueryData(['currentUser'], data.response)
+        onSuccess: (data: UserLoginResponse) => {
+            const jwt = data.response;
+            const decodedJwt: UserFromJwt = jwt_decode(jwt);
+            const currentUser = {id: decodedJwt.id, username: decodedJwt.username, email: decodedJwt.email}
+            queryClient.setQueryData(['currentUser'], currentUser)
+            localStorage.setItem("currentUser", JSON.stringify(currentUser))
         }
     })
 }
