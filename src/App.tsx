@@ -6,13 +6,27 @@ import jwt_decode from "jwt-decode";
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider, useQueryClient } from "react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Layout from "./components/Layout/Layout";
+import Login from "./pages/Login";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: (
+      <Layout>
+        <Home />
+      </Layout>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <Layout>
+        <Login />
+      </Layout>
+    ),
   },
 ]);
 
@@ -27,28 +41,12 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  // const [currentUser, setCurrentUser] = useState<string | null>(null);
-
-  // const login = async () => {
-  //   const response = await fetch("http://localhost:5077/user/login", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-
-  //     }),
-  //   });
-  //   return response;
-  // };
-
-  // useEffect(() => {
-  //   login()
-  //     .then((response) => response.json())
-  //     .then((data) => setCurrentUser(jwt_decode(data.response).username));
-  //   localStorage.setItem("currentUser", JSON.stringify(currentUser));
-  // }, [currentUser]);
-
+  if (localStorage.getItem("currentUser")) {
+    queryClient.setQueryData(
+      ["currentUser"],
+      JSON.parse(localStorage.getItem("currentUser")!)
+    );
+  }
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
