@@ -7,9 +7,9 @@ interface ILayout {
 
 const Layout = ({ children }: ILayout): JSX.Element => {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-500">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-[#300171] to-slate-900 flex flex-col">
       <Header />
-      <main>{children}</main>
+      <main className="flex-1 h-auto">{children}</main>
       <Footer />
     </div>
   );
