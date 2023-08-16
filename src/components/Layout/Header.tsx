@@ -33,12 +33,12 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center p-2 text-[#FFFFFF]">
-      <p>LOGO</p>
+    <header className="flex justify-between items-center text-[#FFFFFF] bg-[#7a62f640] p-4">
+      <p className="text-xl">✂️</p>
       <div className="flex gap-2">
         {!currentUser?.username ? (
-          <div>
-            <button>Login</button>
+          <div className="flex  gap-5 text-xl">
+            <button className="font-bold ml-2">Login</button>
             <button>Register</button>
           </div>
         ) : (
