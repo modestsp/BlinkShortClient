@@ -38,4 +38,5 @@ export interface CreateUrlRequest {
 
 export type UserLoginResponse = Result<string> 
 export type CreateUrlResponse = Result<Omit<Url, 'originalUrl'>>
+export type GetUrlsResponse = Result<Url[]>
 
