@@ -1,4 +1,4 @@
-import { CreateUrlResponse } from "@/types"
+import { CreateUrlResponse, GetUrlsResponse } from "@/types"
 
 
 const headers = { 
@@ -14,6 +14,15 @@ const createUrl = async (url: string, userId?: string): Promise<CreateUrlRespons
     })).json()
 }
 
+const getUrls = async (userId: string):Promise<GetUrlsResponse>  => {
+    const jwt = localStorage.getItem("jwt");
+    return await (await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/${userId}`, {
+        method: "GET",
+        headers: {...headers, Authorization: jwt ? `Bearer ${jwt}`: ""}
+    })).json()
+}
+
 export {
-    createUrl
+    createUrl,
+    getUrls
 }
