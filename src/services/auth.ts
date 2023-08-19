@@ -1,6 +1,8 @@
-import { UserLoginRequest, UserLoginResponse } from "../utils/types";
+import { UserLoginRequest, UserLoginResponse } from "../types";
 
-const headers = { "Content-Type": "application/json"}
+const headers = { 
+    "Content-Type": "application/json",
+}
 
 const login = async ({username, password}: UserLoginRequest): Promise<UserLoginResponse> => {
     console.log(username, password);
@@ -11,7 +13,6 @@ const login = async ({username, password}: UserLoginRequest): Promise<UserLoginR
         body: JSON.stringify({username, password})
     })).json()    
 }
-
 
 export {
     login
