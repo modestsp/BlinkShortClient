@@ -1,16 +1,11 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import jwt_decode from "jwt-decode";
-
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
-import { QueryClient, QueryClientProvider, useQueryClient } from "react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClient, QueryClientProvider } from "react-query";
 import Layout from "./components/Layout/Layout";
 import Login from "./pages/Login";
 import Account from "./pages/Account";
+import Urls from "./pages/Urls";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +29,14 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <Account />
+      </Layout>
+    ),
+  },
+  {
+    path: "/urls",
+    element: (
+      <Layout>
+        <Urls />
       </Layout>
     ),
   },
