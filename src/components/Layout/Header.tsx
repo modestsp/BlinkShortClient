@@ -1,15 +1,20 @@
 import { User } from "@/types";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import LoginForm from "@/components/LoginForm";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -42,11 +47,19 @@ const Header = () => {
 
   return (
     <header className="flex justify-between items-center text-[#FFFFFF] bg-[#7a62f640] p-4 lg:px-12 xl:px-24 2xl:px-72">
-      <p className="text-xl xl:text-2xl font-bold">✂️</p>
+      <Link className="text-xl xl:text-2xl font-bold" to="/">
+        ✂️
+      </Link>
       <div className="flex gap-2">
         {!currentUser?.username ? (
           <div className="flex text-semibold gap-5 text-lg ">
-            <button className=" ml-2">Login</button>
+            <Popover>
+              <PopoverTrigger>Login</PopoverTrigger>
+              <PopoverContent>
+                <LoginForm />
+              </PopoverContent>
+            </Popover>
+
             <button>Register</button>
           </div>
         ) : (
