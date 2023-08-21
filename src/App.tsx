@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from "react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Layout from "./components/Layout/Layout";
 import Login from "./pages/Login";
+import Account from "./pages/Account";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,14 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <Login />
+      </Layout>
+    ),
+  },
+  {
+    path: "/account",
+    element: (
+      <Layout>
+        <Account />
       </Layout>
     ),
   },
