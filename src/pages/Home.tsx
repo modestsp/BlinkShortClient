@@ -6,7 +6,6 @@ import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,17 +15,26 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateUrl } from "@/hooks/useCreateUrl";
-import useGetUrls from "@/hooks/useGetUrls";
+import { Copy } from "lucide-react";
+import { useEffect, useState } from "react";
+import { create } from "domain";
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 const formSchema = z.object({
   url: z.string().url().max(250),
 });
 
 const Home = () => {
-  // Tomar el user del local storage
-  const urls = useGetUrls("6e5d3c58-940f-461f-9363-34dadfd09645");
-
+  const [shortUrl, setShortUrl] = useState<string | undefined>("");
+  const { toast } = useToast();
   const createUrl = useCreateUrl();
+  useEffect(() => {
+    setShortUrl(createUrl.data?.response.shortUrl);
+    console.log(shortUrl);
+  }, [createUrl.data]);
+  // Tomar el user del local storage
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,10 +49,23 @@ const Home = () => {
     console.log(values);
   }
 
-  if (urls.isLoading) return <p>Loading</p>;
-  if (createUrl.isLoading) return <p>Loading...</p>;
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(shortUrl!);
+    toast({
+      description: "Copied to clipboard",
+      className: "bg-[#0f172a] text-white",
+    });
+  };
+  // const handleCopyToClipboard = () => {
+  //           navigator.clipboard.writeText(shortUrl!)}
+  //           toast({
+  //             title: "Copied to clipboard",
+
+  //           })
+  // }
+
   if (createUrl.isError) return <p>Error</p>;
-  console.log(urls, "Urls");
+
   return (
     <div className="flex flex-col items-center px-2">
       <p className="text-4xl text-white mb-2 mt-4 xl:text-5xl">BlinkShort✂️</p>
@@ -56,7 +77,7 @@ const Home = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 flex flex-col w-full px-2 sm:w-96 xl:w-1/3 xl:mt-2"
+          className="space-y-8 flex flex-col w-full  sm:w-[500px] xl:w-[800px]"
         >
           <FormField
             control={form.control}
@@ -67,26 +88,42 @@ const Home = () => {
                   Paste your URL
                 </FormLabel>
                 <FormControl>
-                  <div className="sm:flex items-center sm:shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+                  <div className="flex flex-col sm:flex-row items-center sm:shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
                     <Input
                       className="bg-violet-200 text-white bg-opacity-25  border-violet-300 xl:h-14 xl:text-xl focus:outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-500"
                       placeholder="Enter the link here"
                       {...field}
                     />
                     <Button
-                      className="hover:bg-gray-600 mt-2 sm:mt-0 xl:h-14 xl:text-base"
+                      className="rounded-r-md hover:bg-gray-600 mt-2 sm:mt-0 xl:h-14 xl:text-base"
                       type="submit"
                     >
-                      Submit
+                      {createUrl.isLoading ? "Loading..." : "Submit"}
                     </Button>
                   </div>
                 </FormControl>
-                <FormMessage className="bg-blue-300" />
+                <FormMessage className="text-red-500 text-base mt-2" />
               </FormItem>
             )}
           />
         </form>
       </Form>
+      {createUrl.isError ?? <p>Something went wrong...</p>}
+      {createUrl.isSuccess && (
+        <div
+          // style={{ opacity: !createUrl.isSuccess ? "0" : "1" }}
+          className="flex justify-between text-lg text-white gap-2 font-bold border p-6 mt-6 w-full sm:w-[500px] xl:w-[800px] shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] hover:shadow-[2px_2px_10px_10px_#44337a] rounded-sm transition-all duration-3s bg-[#0f172a] bg-opacity-60"
+        >
+          <p onChange={(e) => console.log(e.currentTarget)}>
+            {createUrl.data.response.shortUrl ?? ""}
+          </p>
+          <Copy
+            onClick={handleCopyToClipboard}
+            size={20}
+            className="hover:scale-110 transition-all cursor-pointer"
+          />
+        </div>
+      )}
     </div>
   );
 };
