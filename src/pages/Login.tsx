@@ -4,7 +4,6 @@ import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -54,20 +53,17 @@ const Login = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col w-96"
+        className="space-y-8 flex flex-col  items-center "
       >
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel className="text-white">Username</FormLabel>
               <FormControl>
                 <Input placeholder="Enter your username here" {...field} />
               </FormControl>
-              <FormDescription className="bg-black">
-                Test description
-              </FormDescription>
               <FormMessage className="bg-blue-300" />
             </FormItem>
           )}
@@ -77,13 +73,10 @@ const Login = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-white">Password</FormLabel>
               <FormControl>
                 <Input placeholder="Enter your password here" {...field} />
               </FormControl>
-              <FormDescription className="bg-black">
-                Test description
-              </FormDescription>
               <FormMessage className="bg-blue-300" />
             </FormItem>
           )}
