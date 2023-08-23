@@ -54,8 +54,10 @@ const Header = () => {
         {!currentUser?.username ? (
           <div className="flex text-semibold gap-5 text-lg ">
             <Popover>
-              <PopoverTrigger>Login</PopoverTrigger>
-              <PopoverContent>
+              <PopoverTrigger onDoubleClick={() => navigate("/login")}>
+                Login
+              </PopoverTrigger>
+              <PopoverContent className="w-[250px] bg-gradient-to-b from-gray-800 via-[#300171d9] to-slate-700 sm:w-auto mr-2">
                 <LoginForm />
               </PopoverContent>
             </Popover>
@@ -76,7 +78,10 @@ const Header = () => {
                   My Account
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuLabel className="cursor-pointer hover:underline text-base">
+                <DropdownMenuLabel
+                  onClick={() => navigate("/urls")}
+                  className="cursor-pointer hover:underline text-base"
+                >
                   My Urls
                 </DropdownMenuLabel>
               </DropdownMenuContent>
