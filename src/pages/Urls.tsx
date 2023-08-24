@@ -19,44 +19,87 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { TrashIcon } from "lucide-react";
-import { Trash } from "lucide-react";
-import { Trash2Icon } from "lucide-react";
-const Urls = () => {
-  const urls = useGetUrls("6e5d3c58-940f-461f-9363-34dadfd09645");
 
-  if (urls.isLoading) return <p>Loading</p>;
-  console.log(urls, "URLS");
+import { Trash2Icon } from "lucide-react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
+import Loader from "@/components/Loader";
+
+const Urls = () => {
+  const urls = useGetUrls(JSON.parse(localStorage.getItem("currentUser"))?.id);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userInLocalStorage = localStorage.getItem("currentUser");
+    if (!userInLocalStorage) {
+      navigate("/login");
+    }
+  }, []);
+
+  const handleCopyToClipboard = (shortUrl: string) => {
+    navigator.clipboard.writeText(shortUrl);
+    toast({
+      description: "Copied to clipboard",
+      className: "bg-[#0f172a] text-white",
+    });
+  };
+
+  if (urls.isLoading) return <Loader />;
+
   return (
-    <div>
-      <p>urls</p>
-      <Table>
-        <TableHeader>
+    <div className="px-2  lg:px-8 w-full">
+      <p className="text-white text-2xl mt-4 mb-4 xl:text-2xl xl:font-semibold">
+        {" "}
+        My Urls
+      </p>
+      <Table className="text-gray-300 font-bold w-full">
+        <TableHeader className="font-extrabold text-base sm:text-lg xl:text-xl">
           <TableRow>
-            <TableHead className="">Id</TableHead>
-            <TableHead>CreatedAt</TableHead>
-            <TableHead>Url</TableHead>
-            <TableHead className="text-right">ShortUrl</TableHead>
-            <TableHead className="text-right">Delete</TableHead>
+            <TableHead className="hidden sm:table-cell text-white ">
+              Id
+            </TableHead>
+            <TableHead className="hidden sm:table-cell text-white l">
+              CreatedAt
+            </TableHead>
+            <TableHead className="text-white">Url</TableHead>
+            <TableHead className="text-right text-white">ShortUrl</TableHead>
+            <TableHead className="text-right text-white">Delete</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="text-sm">
           {urls.data?.response.map((url) => (
             <TableRow key={url.id}>
-              <TableCell>{url.id}</TableCell>
-              <TableCell>{new Date(url.createdAt).toLocaleString()}</TableCell>
-              <TableCell className="w-[400px] overflow-x-auto flex-wrap flex">
+              <TableCell className="hidden sm:table-cell">{url.id}</TableCell>
+              <TableCell className="hidden sm:table-cell">
+                {new Date(url.createdAt).toLocaleString()}
+              </TableCell>
+              <TableCell
+                onClick={() => handleCopyToClipboard(url.originalUrl)}
+                className="w-[150px] sm:w-[200px] xl:w-[800px] cursor-pointer overflow-x-hidden hover:overflow-x-auto flex-wrap flex"
+              >
                 {url.originalUrl}
               </TableCell>
-              <TableCell className="text-right">{url.shortUrl}</TableCell>
+              <TableCell
+                onClick={() =>
+                  handleCopyToClipboard(
+                    `${import.meta.env.VITE_CLIENT_BASE_URL + url.shortUrl}`
+                  )
+                }
+                className="text-right cursor-pointer"
+              >
+                {url.shortUrl}
+              </TableCell>
               <TableCell className="text-right">
                 <AlertDialog>
                   <AlertDialogTrigger className="hover:scale-110">
                     <Trash2Icon />
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent className="bg-gray-900">
                     <AlertDialogHeader>
-                      <AlertDialogTitle>
+                      <AlertDialogTitle className="text-white">
                         Are you absolutely sure?
                       </AlertDialogTitle>
                       <AlertDialogDescription>
@@ -66,7 +109,9 @@ const Urls = () => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Continue</AlertDialogAction>
+                      <AlertDialogAction className="border">
+                        Continue
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
