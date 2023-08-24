@@ -30,6 +30,12 @@ export interface UserLoginRequest {
     password: string
 }
 
+export interface UserRegisterRequest {
+    username: string
+    email: string
+    password: string
+}
+
 export interface CreateUrlRequest {
   url: string
   userId?: string
@@ -37,6 +43,7 @@ export interface CreateUrlRequest {
 
 
 export type UserLoginResponse = Result<string> 
+export type UserRegisterResponse = Result<string>
 export type CreateUrlResponse = Result<Omit<Url, 'originalUrl'>>
 export type GetUrlsResponse = Result<Url[]>
 
