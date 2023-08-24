@@ -22,18 +22,22 @@ import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 
 const formSchema = z.object({
-  url: z.string().url().max(250),
+  url: z.string().url({ message: "Invalid URL" }).max(500),
 });
 
 const Home = () => {
   const [shortUrl, setShortUrl] = useState<string | undefined>("");
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { toast } = useToast();
   const createUrl = useCreateUrl();
   useEffect(() => {
+    const userInLocalStorage = localStorage.getItem("currentUser");
+    if (userInLocalStorage) {
+      const storedUser = JSON.parse(localStorage.getItem("currentUser") ?? "");
+      setCurrentUser(storedUser);
+    }
     setShortUrl(createUrl.data?.response.shortUrl);
-    console.log(shortUrl);
   }, [createUrl.data]);
-  // Tomar el user del local storage
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,6 +48,7 @@ const Home = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     createUrl.mutateAsync({
       ...values,
+      userId: currentUser?.id,
     });
 
     console.log(values);
@@ -56,19 +61,12 @@ const Home = () => {
       className: "bg-[#0f172a] text-white",
     });
   };
-  // const handleCopyToClipboard = () => {
-  //           navigator.clipboard.writeText(shortUrl!)}
-  //           toast({
-  //             title: "Copied to clipboard",
-
-  //           })
-  // }
 
   if (createUrl.isError) return <p>Error</p>;
 
   return (
     <div className="flex flex-col items-center px-2">
-      <p className="text-4xl text-white mb-2 mt-4 xl:text-5xl">BlinkShort✂️</p>
+      <p className="text-4xl text-white mb-2 mt-4 xl:text-5xl">Blink Short✂️</p>
       <p className="text-white text-xl mt-4 mb-8 xl:text-2xl xl:font-semibold">
         {" "}
         Transform long, unsightly URLs into <br /> elegant, compact links with
@@ -95,7 +93,7 @@ const Home = () => {
                       {...field}
                     />
                     <Button
-                      className="rounded-r-md hover:bg-gray-600 mt-2 sm:mt-0 xl:h-14 xl:text-base"
+                      className="rounded-r-md hover:bg-gray-600 mt-2 sm:mt-0 xl:h-14 xl:text-base transition-all"
                       type="submit"
                     >
                       {createUrl.isLoading ? "Loading..." : "Submit"}
@@ -112,7 +110,7 @@ const Home = () => {
       {createUrl.isSuccess && (
         <div
           // style={{ opacity: !createUrl.isSuccess ? "0" : "1" }}
-          className="flex justify-between text-lg text-white gap-2 font-bold border p-6 mt-6 w-full sm:w-[500px] xl:w-[800px] shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] hover:shadow-[2px_2px_10px_10px_#44337a] rounded-sm transition-all duration-3s bg-[#0f172a] bg-opacity-60"
+          className="flex justify-between text-sm sm:text-lg text-white gap-2 font-bold border p-6 mt-6 w-full sm:w-[500px] xl:w-[800px] shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] hover:shadow-[2px_2px_10px_10px_#44337a] rounded-sm transition-all duration-3s bg-[#0f172a] bg-opacity-60"
         >
           <p onChange={(e) => console.log(e.currentTarget)}>
             {createUrl.data.response.shortUrl ?? ""}
