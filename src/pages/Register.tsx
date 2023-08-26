@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useLogin } from "@/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useQueryClient } from "react-query";
@@ -30,7 +29,7 @@ const formSchema = z.object({
       (value) => {
         const hasUppercase = /[A-Z]/.test(value);
         const hasLowercase = /[a-z]/.test(value);
-        const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
+        const hasSpecialCharacter = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/.test(
           value
         );
 
@@ -70,11 +69,6 @@ const Register = () => {
       email: values.email,
       password: values.password,
     });
-
-    console.log("values", values);
-    if (register.isSuccess) {
-      console.log("REGISTER DATA", register.data);
-    }
   }
 
   return (
