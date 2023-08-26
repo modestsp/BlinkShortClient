@@ -1,5 +1,4 @@
 import Loader from "@/components/Loader";
-import Sidebar from "@/components/Sidebar";
 import { User } from "@/types";
 import { useEffect, useState } from "react";
 
@@ -8,9 +7,7 @@ const Account = () => {
 
   useEffect(() => {
     const userInLocalStorage = JSON.parse(localStorage.getItem("currentUser")!);
-    console.log("USER IN LOCAL STORAGE", userInLocalStorage);
     setCurrentUser(userInLocalStorage);
-    console.log("CURRENT USER IN ACC", currentUser);
   }, []);
 
   return (
