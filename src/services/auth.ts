@@ -5,7 +5,6 @@ const headers = {
 }
 
 const login = async ({username, password}: UserLoginRequest): Promise<UserLoginResponse> => {
-    console.log(username, password);
     return await (await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/login`,
     {
         method: "POST",
@@ -15,7 +14,6 @@ const login = async ({username, password}: UserLoginRequest): Promise<UserLoginR
 }
 
 const register = async ({username, email, password}: UserRegisterRequest): Promise<UserRegisterResponse> => {
-    console.log("DATOS REGISTER", username, email, password);
     return await (await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/register`,
     {
         method: "POST",
