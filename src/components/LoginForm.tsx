@@ -19,22 +19,7 @@ import { User } from "@/types";
 
 const formSchema = z.object({
   username: z.string().nonempty({ message: "Cannot be empty" }).max(25),
-  password: z.string().min(1).max(50),
-  // .refine(
-  //   (value) => {
-  //     const hasUppercase = /[A-Z]/.test(value);
-  //     const hasLowercase = /[a-z]/.test(value);
-  //     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
-  //       value
-  //     );
-
-  //     return hasUppercase && hasLowercase && hasSpecialCharacter;
-  //   },
-  //   {
-  //     message:
-  //       "Password must contain at least one uppercase, one lowercase and one special character",
-  //   }
-  // ),
+  password: z.string().nonempty({ message: "Cannot be empty" }).max(50),
 });
 
 const LoginForm = () => {
@@ -58,12 +43,8 @@ const LoginForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     login.mutateAsync({ username: values.username, password: values.password });
+  }
 
-    console.log(values);
-  }
-  if (login.isSuccess) {
-    console.log(login.data);
-  }
   return (
     <Form {...form}>
       <form
@@ -109,12 +90,15 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button className="w-[220px] sm:w-[250px]" type="submit">
+        <Button
+          className="w-[220px] bg-gradient-to-b hover:bg-gray-600 bg-[#300171d9] sm:w-[250px] rounded-sm"
+          type="submit"
+        >
           {login.isLoading ? "Loading..." : "Submit"}
         </Button>
       </form>
-      <div className="text-red-500 font-semibold text-sm mt-2">
-        {login.isError && "Username or password is incorrect"}
+      <div className="text-red-500 font-semibold text-sm  lg:text-base mt-2">
+        {login.isError && "username or password is incorrect"}
       </div>
     </Form>
   );
