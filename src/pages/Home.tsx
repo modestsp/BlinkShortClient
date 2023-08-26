@@ -1,5 +1,3 @@
-import { useQueryClient } from "react-query";
-import { useLogin } from "../hooks/useLogin";
 import { User } from "../types";
 import { Button } from "@/components/ui/button";
 import * as z from "zod";
@@ -17,9 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateUrl } from "@/hooks/useCreateUrl";
 import { Copy } from "lucide-react";
 import { useEffect, useState } from "react";
-import { create } from "domain";
 import { useToast } from "@/components/ui/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 
 const formSchema = z.object({
   url: z.string().url({ message: "Invalid URL" }).max(500),
@@ -50,8 +46,6 @@ const Home = () => {
       ...values,
       userId: currentUser?.id,
     });
-
-    console.log(values);
   }
 
   const handleCopyToClipboard = () => {
@@ -112,9 +106,7 @@ const Home = () => {
           // style={{ opacity: !createUrl.isSuccess ? "0" : "1" }}
           className="flex justify-between text-sm sm:text-lg text-white gap-2 font-bold border p-6 mt-6 w-full sm:w-[500px] xl:w-[800px] shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] hover:shadow-[2px_2px_10px_10px_#44337a] rounded-sm transition-all duration-3s bg-[#0f172a] bg-opacity-60"
         >
-          <p onChange={(e) => console.log(e.currentTarget)}>
-            {createUrl.data.response.shortUrl ?? ""}
-          </p>
+          <p>{createUrl.data?.response?.shortUrl ?? ""}</p>
           <Copy
             onClick={handleCopyToClipboard}
             size={20}
