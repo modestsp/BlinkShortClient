@@ -2,7 +2,6 @@ import useGetUrls from "@/hooks/useGetUrls";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -24,11 +23,13 @@ import { Trash2Icon } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { Skeleton } from "@/components/ui/skeleton";
 import Loader from "@/components/Loader";
+import { useDeleteUrl } from "@/hooks/useDeleteUrl";
 
 const Urls = () => {
-  const urls = useGetUrls(JSON.parse(localStorage.getItem("currentUser"))?.id);
+  const urls = useGetUrls(JSON.parse(localStorage.getItem("currentUser")!).id);
+  const deleteUrl = useDeleteUrl();
+
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -45,6 +46,20 @@ const Urls = () => {
       description: "Copied to clipboard",
       className: "bg-[#0f172a] text-white",
     });
+  };
+
+  const handleDeleteUrl = (urlId: number) => {
+    deleteUrl.mutateAsync({
+      urlId,
+      userId: JSON.parse(localStorage.getItem("currentUser")!).id,
+    });
+
+    if (deleteUrl.isError) {
+      toast({
+        description: "Something went wrong",
+        className: "bg-red-900 text-white",
+      });
+    }
   };
 
   if (urls.isLoading) return <Loader />;
@@ -109,7 +124,10 @@ const Urls = () => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction className="border">
+                      <AlertDialogAction
+                        onClick={() => handleDeleteUrl(url.id)}
+                        className="border"
+                      >
                         Continue
                       </AlertDialogAction>
                     </AlertDialogFooter>
