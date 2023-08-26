@@ -6,6 +6,12 @@ import Layout from "./components/Layout/Layout";
 import Login from "./pages/Login";
 import Account from "./pages/Account";
 import Urls from "./pages/Urls";
+import Register from "./pages/Register";
+import { useEffect, useState } from "react";
+import { UserFromJwt } from "./types";
+import { toast } from "./components/ui/use-toast";
+import jwt_decode from "jwt-decode";
+import Error from "./pages/Error";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +19,11 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <Home />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <Error />
       </Layout>
     ),
   },
@@ -40,6 +51,14 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
+  {
+    path: "/register",
+    element: (
+      <Layout>
+        <Register />
+      </Layout>
+    ),
+  },
 ]);
 
 const queryClient = new QueryClient({
@@ -53,6 +72,29 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const [jwt, setJwt] = useState(localStorage.getItem("jwt"));
+
+  useEffect(() => {
+    if (jwt) {
+      const decodedJwt: UserFromJwt = jwt_decode(jwt);
+      const tokenExpirationDate = new Date(decodedJwt.exp * 1000);
+      const now = new Date();
+      if (tokenExpirationDate < now) {
+        setJwt(null);
+        localStorage.removeItem("jwt");
+        localStorage.removeItem("currentUser");
+        toast({
+          description:
+            "Your session has expired. Please log in again. Redirecting...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
+      }
+    }
+  }, [jwt]);
+
   if (localStorage.getItem("currentUser")) {
     queryClient.setQueryData(
       ["currentUser"],
