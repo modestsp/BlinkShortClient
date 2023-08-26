@@ -41,6 +41,11 @@ export interface CreateUrlRequest {
   userId?: string
 }
 
+export interface DeleteUrlRequest {
+  urlId: number
+  userId: string
+}
+
 
 export type UserLoginResponse = Result<string> 
 export type UserRegisterResponse = Result<string>
