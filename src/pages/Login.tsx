@@ -18,8 +18,8 @@ import { useQueryClient } from "react-query";
 import { User } from "@/types";
 
 const formSchema = z.object({
-  username: z.string().min(1).max(25),
-  password: z.string().min(1).max(50),
+  username: z.string().nonempty({ message: "Cannot be empty" }).max(25),
+  password: z.string().nonempty({ message: "Cannot be empty" }).max(50),
 });
 
 const Login = () => {
@@ -43,24 +43,19 @@ const Login = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     login.mutateAsync({ username: values.username, password: values.password });
-
-    console.log(values);
-  }
-  if (login.isSuccess) {
-    console.log(login.data);
   }
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col  items-center "
+        className="space-y-8 flex flex-col py-8 px-2 w-full items-center "
       >
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-white">Username</FormLabel>
+            <FormItem className="w-full sm:w-2/3 xl:w-1/2">
+              <FormLabel className="text-white xl:text-xl">Username</FormLabel>
               <FormControl>
                 <Input placeholder="Enter your username here" {...field} />
               </FormControl>
@@ -72,16 +67,28 @@ const Login = () => {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-white">Password</FormLabel>
+            <FormItem className="w-full sm:w-2/3 xl:w-1/2">
+              <FormLabel className="text-white xl:text-xl">Password</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your password here" {...field} />
+                <Input
+                  type="password"
+                  placeholder="Enter your password here"
+                  {...field}
+                />
               </FormControl>
-              <FormMessage className="bg-blue-300" />
+              <FormMessage className="text-red-500 font-bold text-sm" />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <div className="text-red-500 font-semibold text-sm lg:text-base mt-2">
+          {login.isError && "username or password is incorrect"}
+        </div>
+        <Button
+          className="w-full rounded-sm sm:w-1/3 xl:w-[400px]"
+          type="submit"
+        >
+          {login.isLoading ? "Loading..." : "Submit"}
+        </Button>
       </form>
     </Form>
   );
