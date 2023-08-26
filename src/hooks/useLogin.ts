@@ -10,7 +10,7 @@ export const useLogin = () => {
 
     return useMutation((loginRequest: UserLoginRequest) => login(loginRequest), {
         onSuccess: (data: UserLoginResponse) => {
-            const jwt = data.response;
+            const jwt = data.response ?? "";
             localStorage.setItem("jwt", jwt)
             const decodedJwt: UserFromJwt = jwt_decode(jwt);
             const currentUser = {id: decodedJwt.id, username: decodedJwt.username, email: decodedJwt.email}
