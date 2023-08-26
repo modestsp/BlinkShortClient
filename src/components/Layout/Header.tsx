@@ -25,9 +25,7 @@ const Header = () => {
     const cachedUser = queryClient.getQueryData<User | null>(["currentUser"]);
 
     if (cachedUser) {
-      console.log("CACHED USER FOUNDED");
       setCurrentUser(cachedUser);
-      console.log("CURRENT USER HEADER CACHED", currentUser);
     } else {
       const storedUser = JSON.parse(localStorage.getItem("currentUser")!);
       if (storedUser) {
@@ -54,15 +52,20 @@ const Header = () => {
         {!currentUser?.username ? (
           <div className="flex text-semibold gap-5 text-lg ">
             <Popover>
-              <PopoverTrigger onDoubleClick={() => navigate("/login")}>
+              <PopoverTrigger
+                className="font-semibold lg:text-xl"
+                onDoubleClick={() => navigate("/login")}
+              >
                 Login
               </PopoverTrigger>
-              <PopoverContent className="w-[250px] bg-gradient-to-b from-gray-800 via-[#300171d9] to-slate-700 sm:w-auto mr-2">
+              <PopoverContent className="w-[250px] bg-[#0f172a]  sm:w-auto mr-2">
                 <LoginForm />
               </PopoverContent>
             </Popover>
 
-            <button>Register</button>
+            <Link className="font-semibold lg:text-xl" to={"/register"}>
+              Sign Up
+            </Link>
           </div>
         ) : (
           <div className="flex gap-5 text-base">
@@ -86,7 +89,12 @@ const Header = () => {
                 </DropdownMenuLabel>
               </DropdownMenuContent>
             </DropdownMenu>
-            <button onClick={handleLogout}>Logout</button>
+            <button
+              className="font-semibold lg:text-xl hover:text-gray-400 transition-all"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
           </div>
         )}
       </div>{" "}

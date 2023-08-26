@@ -1,9 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
-  const navigate = useNavigate();
-
   return (
     <footer className="flex mt-auto items-center justify-center gap-3 bg-[#7a62f640] p-3">
       <p>
