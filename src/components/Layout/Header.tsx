@@ -53,7 +53,7 @@ const Header = () => {
           <div className="flex text-semibold gap-5 text-lg ">
             <Popover>
               <PopoverTrigger
-                className="font-semibold lg:text-xl"
+                className="font-semibold lg:text-xl hover:text-gray-400 transition-all"
                 onDoubleClick={() => navigate("/login")}
               >
                 Login
@@ -63,7 +63,10 @@ const Header = () => {
               </PopoverContent>
             </Popover>
 
-            <Link className="font-semibold lg:text-xl" to={"/register"}>
+            <Link
+              className="font-semibold lg:text-xl hover:text-gray-400 transition-all"
+              to={"/register"}
+            >
               Sign Up
             </Link>
           </div>
