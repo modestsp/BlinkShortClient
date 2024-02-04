@@ -55,9 +55,20 @@ const Home = () => {
       className: "bg-[#0f172a] text-white",
     });
   };
-
-  if (createUrl.isError) return <p>Error</p>;
-
+  if (createUrl.isError)
+    return (
+      <div className="text-white flex flex-col justify-center items-center">
+        <p className="text-2xl">
+          Something went wrong while creating your link :(
+        </p>
+        <button
+          className="mt-3 p-1 text-xl hover:scale-105 transition-all"
+          onClick={() => window.location.reload()}
+        >
+          Go back
+        </button>
+      </div>
+    );
   return (
     <div className="flex flex-col items-center px-2">
       <p className="text-4xl text-white mb-2 mt-4 xl:text-5xl">Blink Short✂️</p>
